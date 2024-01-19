@@ -9,10 +9,20 @@ use Illuminate\Http\Request;
 class ProjectController extends Controller
 {
     public function index() {
-        $projects = Project::all();
+        $results = Project::paginate(5);
         return response()->json([
             'success' => true,
-            'results' => $projects,
+            'results' => $results,
         ]);
+    }
+
+    public function show($slug){
+        $project = Project::where('slug', $slug)->first();
+    
+        if (!$project) {
+            return response()->json(['error' => 'Progetto non trovato'], 404);
+        }
+    
+        return response()->json($project);
     }
 }
